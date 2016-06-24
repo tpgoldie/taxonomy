@@ -33,15 +33,3 @@ case class Node(tag: Tag, val id: Id) {
 
   override def toString = s"${id.value}"
 }
-
-object Node {
-  implicit class by(value: Id) {
-    def id: Id = value
-  }
-
-  implicit class find(node: Node) {
-    def by(value: by): Seq[Node] = {
-      By(node).id(value.id)
-    }
-  }
-}

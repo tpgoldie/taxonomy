@@ -2,7 +2,7 @@ package com.tpg.taxonomy
 
 import scala.collection.mutable.ListBuffer
 
-case class By(rootNode: Node) {
+case class By(tree: TaxonomyTree) {
   def id(id: Id): Seq[Node] = {
     def find(id: Id, nodes: Seq[Node], foundNodes: ListBuffer[Node]): Unit = {
       nodes foreach { node =>
@@ -17,7 +17,7 @@ case class By(rootNode: Node) {
 
     val foundNodes = ListBuffer[Node]()
 
-    find(id, rootNode.children, foundNodes)
+    tree.rootNode foreach { node => find(id, node.children, foundNodes)}
 
     foundNodes
   }
