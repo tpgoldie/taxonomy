@@ -1,25 +1,25 @@
 package com.tpg.taxonomy
 
-import com.tpg.taxonomy.Id._
-import com.tpg.taxonomy.TaxonomyTree._
+
+import scala.collection.mutable.ListBuffer
 
 case class Tag(name: String, translations: Seq[Translation])
 
+
 case class TaxonomyTree(rootNode: Option[Node]) {
-  def findById(value: String): Seq[Node] = {
-    val found = rootNode map { node => find(this) by toId(value) }
-    found.getOrElse(Seq())
-  }
-}
+  def findById(id: String): Seq[Node] = {
+    val found = ListBuffer[Node]()
 
-object TaxonomyTree {
-  implicit class by(value: Id) {
-    def id: Id = value
+    rootNode map { node => findById(node.children, id, found) }
+
+    found
   }
 
-  implicit class find(tree: TaxonomyTree) {
-    def by(value: by): Seq[Node] = {
-      By(tree).id(value.id)
+  private def findById(nodes: Seq[Node], id: Id, found: ListBuffer[Node]): Unit = {
+    nodes foreach { node =>
+      if (node.id == id) { found += node }
+
+      findById(node.children, id, found)
     }
   }
 }

@@ -7,7 +7,9 @@
 .project
 .history
 .idea
+.cache-main
 .lib/
+.settings/
 dist/*
 target/
 lib_managed/

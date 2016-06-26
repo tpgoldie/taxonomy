@@ -5,10 +5,10 @@ import scala.collection.mutable.ListBuffer
 case class Id(value: String)
 
 object Id {
-  implicit def toId(value: String) = Id(value)
+  implicit def toId(value: String): Id = Id(value)
 }
 
-case class Node(tag: Tag, val id: Id) {
+case class Node(tag: Tag, id: Id = IdGenerator.generate, label: String) {
   private val childNodes: ListBuffer[Node] = ListBuffer()
 
   val children: Seq[Node] = childNodes
@@ -17,7 +17,7 @@ case class Node(tag: Tag, val id: Id) {
 
   def descendants: Seq[Node] = {
     def descendants(nodes: Seq[Node], foundNodes: ListBuffer[Node]): Unit = {
-      if (!nodes.isEmpty) {
+      if (nodes.nonEmpty) {
         nodes foreach { node => {
             foundNodes += node
             descendants(node.children, foundNodes)
