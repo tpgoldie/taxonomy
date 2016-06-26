@@ -8,6 +8,8 @@ object Id {
   implicit def toId(value: String): Id = Id(value)
 }
 
+case class Tag(name: String, translations: Seq[Translation])
+
 case class Node(tag: Tag, id: Id = IdGenerator.generate, label: String) {
   private val childNodes: ListBuffer[Node] = ListBuffer()
 
@@ -31,5 +33,5 @@ case class Node(tag: Tag, id: Id = IdGenerator.generate, label: String) {
     existingNodes
   }
 
-  override def toString = s"${id.value}"
+  override def toString = s"${id.value}:${label}"
 }
