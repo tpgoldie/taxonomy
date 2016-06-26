@@ -3,9 +3,6 @@ package com.tpg.taxonomy
 
 import scala.collection.mutable.ListBuffer
 
-case class Tag(name: String, translations: Seq[Translation])
-
-
 case class TaxonomyTree(rootNode: Option[Node]) {
   def findById(id: String): Seq[Node] = {
     val found = ListBuffer[Node]()
@@ -20,6 +17,22 @@ case class TaxonomyTree(rootNode: Option[Node]) {
       if (node.id == id) { found += node }
 
       findById(node.children, id, found)
+    }
+  }
+
+  def findByTag(tag: Tag): Seq[Node] = {
+    val found = ListBuffer[Node]()
+
+    rootNode map { node => findByTag(node.children, tag, found) }
+
+    found
+  }
+
+  private def findByTag(nodes: Seq[Node], tag: Tag, found: ListBuffer[Node]): Unit = {
+    nodes foreach { node =>
+      if (node.tag == tag) { found += node }
+
+      findByTag(node.children, tag, found)
     }
   }
 }
