@@ -10,7 +10,9 @@ object Id {
   implicit def toId(value: String): Id = Id(value)
 }
 
-case class Tag(name: String, translations: Seq[Translation])
+case class Tag(name: String, translations: Seq[Translation]) {
+  override def toString = name
+}
 
 case class Node(parent: Option[Node] = None, tag: Tag = Tag("", Seq.empty), id: Id = IdGenerator.generate, label: String = "") {
   private val childNodes: ListBuffer[Node] = ListBuffer()
@@ -35,6 +37,11 @@ case class Node(parent: Option[Node] = None, tag: Tag = Tag("", Seq.empty), id: 
     descendants(children, existingNodes)
 
     existingNodes
+  }
+
+  def serialize = {
+    val line = parent map { p => s"${p.id.value}"} getOrElse ""
+    s"${line},${id.toString},${tag.name},${label}"
   }
 
   override def toString = s"${id.value}:${label}"

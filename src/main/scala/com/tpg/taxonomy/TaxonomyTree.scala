@@ -4,19 +4,21 @@ package com.tpg.taxonomy
 import scala.collection.mutable.ListBuffer
 
 case class TaxonomyTree(rootNode: Option[Node]) {
-  def findById(id: String): Seq[Node] = {
+  def findById(id: String): Option[Node] = {
     val found = ListBuffer[Node]()
 
-    rootNode map { node => findById(node.children, id, found) }
+    rootNode foreach { node => if (node.id == Id(id)) { found += node } else { findById(node.children, id, found) } }
 
-    found
+    found.headOption
   }
 
   private def findById(nodes: Seq[Node], id: Id, found: ListBuffer[Node]): Unit = {
     nodes foreach { node =>
       if (node.id == id) { found += node }
 
-      findById(node.children, id, found)
+      if (found.isEmpty) {
+        findById(node.children, id, found)
+      }
     }
   }
 

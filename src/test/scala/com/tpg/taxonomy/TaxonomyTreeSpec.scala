@@ -1,7 +1,6 @@
 package com.tpg.taxonomy
 
 import com.tpg.taxonomy.Tags.find
-import com.tpg.taxonomy.io.CsvSerializer
 import org.scalatest.{Matchers, GivenWhenThen, FeatureSpec}
 
 class TaxonomyTreeSpec extends FeatureSpec with GivenWhenThen with Matchers {
@@ -31,8 +30,7 @@ class TaxonomyTreeSpec extends FeatureSpec with GivenWhenThen with Matchers {
       val result = tree.findById(id)
 
       Then("It will find 1 chinese node matching given id")
-      result.size should be(1)
-      result(0) should be(chineseNode)
+      result should be(Some(chineseNode))
     }
   }
 
