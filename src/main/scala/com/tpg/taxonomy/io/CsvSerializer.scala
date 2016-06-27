@@ -8,18 +8,22 @@ case class CsvSerializer(tree: TaxonomyTree) extends Serialize {
   override def serialize: Seq[String] = {
     val lines = ListBuffer[String]()
 
-    tree.rootNode foreach { node => node.children foreach { child => serializeNode(child, lines) } }
+    tree.rootNode foreach { node =>
+      serializeChildren(node.children, lines)
+    }
 
     lines
   }
 
-  private def serializeNode(node: Node, lines: ListBuffer[String]): Unit = {
-    val line = node.parent map { parent => serializeNode(parent) } getOrElse("")
+  private def serializeChildren(children: Seq[Node], lines: ListBuffer[String]): Unit = {
+    if (children.nonEmpty) {
+      lines += children map { child => child.serialize } mkString ","
 
-    lines += s"${line},${serializeNode(node)}"
+      val nextLevelChildren = new ListBuffer[Node]
 
-    node.children foreach { child => serializeNode(child, lines) }
+      children foreach { node => node.children foreach { child => nextLevelChildren += child } }
+
+      serializeChildren(nextLevelChildren, lines)
+    }
   }
-
-  def serializeNode(node: Node): String = s"${node.tag.name},${node.label}"
 }
