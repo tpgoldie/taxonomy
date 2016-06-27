@@ -1,6 +1,7 @@
 package com.tpg.taxonomy
 
 import com.tpg.taxonomy.Tags.find
+import com.tpg.taxonomy.io.CsvSerializer
 import org.scalatest.{Matchers, GivenWhenThen, FeatureSpec}
 
 class TaxonomyTreeSpec extends FeatureSpec with GivenWhenThen with Matchers {
@@ -9,25 +10,19 @@ class TaxonomyTreeSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
     scenario("retrieve node by id") {
       Given("a taxonomy tree")
-      val rootNode = Node(Tag("", Seq()), "", "")
+      val rootNode = Node()
 
-      val categoriesNode = Node(find("category").get, IdGenerator.generate, "categories")
-      rootNode.addNode(categoriesNode)
+      val categoriesNode = Node(rootNode, find("category").get, "categories")
 
-      val showsNode = Node(find("show").get, IdGenerator.generate, "shows")
-      categoriesNode.addNode(showsNode)
+      val showsNode = Node(categoriesNode, find("show").get, "shows")
 
-      val filmsNode = Node(find("film").get, IdGenerator.generate, "films")
-      showsNode.addNode(filmsNode)
+      val filmsNode = Node(showsNode, find("film").get, "films")
 
-      val chineseNode = Node(find("chinese").get, IdGenerator.generate, "chinese")
-      filmsNode.addNode(chineseNode)
+      val chineseNode = Node(filmsNode, find("chinese").get, "chinese")
 
-      val restaurantsNode = Node(find("restaurant").get, IdGenerator.generate, "restaurants")
-      categoriesNode.addNode(restaurantsNode)
+      val restaurantsNode = Node(categoriesNode, find("restaurant").get, "restaurants")
 
-      val chinese2Node = Node(find("chinese").get, IdGenerator.generate, "chinese")
-      restaurantsNode.addNode(chinese2Node)
+      val chinese2Node = Node(restaurantsNode, find("chinese").get, "chinese")
 
       val tree = TaxonomyTree(Option(rootNode))
 
@@ -44,28 +39,21 @@ class TaxonomyTreeSpec extends FeatureSpec with GivenWhenThen with Matchers {
   feature("retrieving all the descendants of a node") {
     scenario("retrieve descendant nodes") {
       Given("a taxonomy tree")
-      val rootNode = Node(Tag("", Seq()), "", "")
+      val rootNode = Node()
 
-      val categoriesNode = Node(find("category").get, IdGenerator.generate, "categories")
-      rootNode.addNode(categoriesNode)
+      val categoriesNode = Node(rootNode, find("category").get, "categories")
 
-      val showsNode = Node(find("show").get, IdGenerator.generate, "shows")
-      categoriesNode.addNode(showsNode)
+      val showsNode = Node(categoriesNode, find("show").get, "shows")
 
-      val musicNode = Node(find("music").get, IdGenerator.generate, "music")
-      categoriesNode.addNode(musicNode)
+      val musicNode = Node(categoriesNode, find("music").get, "music")
 
-      val filmsNode = Node(find("film").get, IdGenerator.generate, "films")
-      showsNode.addNode(filmsNode)
+      val filmsNode = Node(showsNode, find("film").get, "films")
 
-      val chineseNode = Node(find("chinese").get, IdGenerator.generate, "chinese")
-      filmsNode.addNode(chineseNode)
+      val chineseNode = Node(filmsNode, find("chinese").get, "chinese")
 
-      val restaurantsNode = Node(find("restaurant").get, IdGenerator.generate, "restaurants")
-      categoriesNode.addNode(restaurantsNode)
+      val restaurantsNode = Node(categoriesNode, find("restaurant").get, "restaurants")
 
-      val chinese2Node = Node(find("chinese").get, IdGenerator.generate, "chinese")
-      restaurantsNode.addNode(chinese2Node)
+      val chinese2Node = Node(restaurantsNode, find("chinese").get, "chinese")
 
       When("I ask for the descendants of a node")
       val result = showsNode descendants
@@ -78,28 +66,21 @@ class TaxonomyTreeSpec extends FeatureSpec with GivenWhenThen with Matchers {
   feature("retrieving nodes by tag") {
     scenario("retrieve descendant nodes") {
       Given("a taxonomy tree")
-      val rootNode = Node(Tag("", Seq()), "", "")
+      val rootNode = Node(None, Tag("", Seq()), "", "")
 
-      val categoriesNode = Node(find("category").get, IdGenerator.generate, "categories")
-      rootNode.addNode(categoriesNode)
+      val categoriesNode = Node(rootNode, find("category").get, "categories")
 
-      val showsNode = Node(find("show").get, IdGenerator.generate, "shows")
-      categoriesNode.addNode(showsNode)
+      val showsNode = Node(categoriesNode, find("show").get, "shows")
 
-      val musicNode = Node(find("music").get, IdGenerator.generate, "music")
-      categoriesNode.addNode(musicNode)
+      val musicNode = Node(categoriesNode, find("music").get, "music")
 
-      val filmsNode = Node(find("film").get, IdGenerator.generate, "films")
-      showsNode.addNode(filmsNode)
+      val filmsNode = Node(showsNode, find("film").get, "films")
 
-      val chineseNode = Node(find("chinese").get, IdGenerator.generate, "chinese")
-      filmsNode.addNode(chineseNode)
+      val chineseNode = Node(filmsNode, find("chinese").get, "chinese")
 
-      val restaurantsNode = Node(find("restaurant").get, IdGenerator.generate, "restaurants")
-      categoriesNode.addNode(restaurantsNode)
+      val restaurantsNode = Node(categoriesNode, find("restaurant").get, "restaurants")
 
-      val chinese2Node = Node(find("chinese").get, IdGenerator.generate, "chinese")
-      restaurantsNode.addNode(chinese2Node)
+      val chinese2Node = Node(restaurantsNode, find("chinese").get, "chinese")
 
       val tree = TaxonomyTree(Option(rootNode))
 
